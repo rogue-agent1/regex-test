@@ -1,24 +1,18 @@
 #!/usr/bin/env python3
-"""regex_test - Test and explain regex patterns."""
-import sys,re
-COMMON={"email":r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}",
-    "ipv4":r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b",
-    "url":r"https?://[\w.-]+(?:/[\w./-]*)?",
-    "phone":r"[\+]?[\d\s()-]{7,15}",
-    "date":r"\d{4}-\d{2}-\d{2}"}
-def test_pattern(pattern,text,flags=0):
-    matches=list(re.finditer(pattern,text,flags))
-    return[{"match":m.group(),"start":m.start(),"end":m.end(),"groups":m.groups()} for m in matches]
-def highlight(pattern,text):
-    result="";last=0
-    for m in re.finditer(pattern,text):
-        result+=text[last:m.start()]+f"\033[31m{m.group()}\033[0m";last=m.end()
-    return result+text[last:]
-if __name__=="__main__":
-    if len(sys.argv)<2:print("Patterns: "+", ".join(COMMON.keys()));sys.exit(1)
-    pattern=COMMON.get(sys.argv[1],sys.argv[1])
-    if len(sys.argv)>2:
-        text=" ".join(sys.argv[2:]);matches=test_pattern(pattern,text)
-        print(highlight(pattern,text));print(f"\n{len(matches)} matches:")
-        for m in matches:print(f"  '{m['match']}' at [{m['start']}:{m['end']}]")
-    else:print(f"Pattern: {pattern}")
+"""Regex tester — match, search, findall with group display."""
+import sys, re
+def cli():
+    if len(sys.argv) < 3: print("Usage: regex_test <pattern> <text> [findall|match|sub REPL]"); sys.exit(1)
+    pat, text = sys.argv[1], sys.argv[2]; cmd = sys.argv[3] if len(sys.argv)>3 else "findall"
+    try:
+        if cmd == "findall":
+            for i, m in enumerate(re.finditer(pat, text)):
+                print(f"  [{i}] '{m.group()}' at {m.start()}-{m.end()}")
+                for j, g in enumerate(m.groups(), 1): print(f"      group {j}: '{g}'")
+        elif cmd == "match":
+            m = re.match(pat, text)
+            print(f"  Match: {'Yes' if m else 'No'}")
+            if m: print(f"  Matched: '{m.group()}'"); [print(f"  Group {i}: '{g}'") for i, g in enumerate(m.groups(), 1)]
+        elif cmd == "sub": print(re.sub(pat, sys.argv[4], text))
+    except re.error as e: print(f"  Error: {e}")
+if __name__ == "__main__": cli()

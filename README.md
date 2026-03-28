@@ -1,11 +1,13 @@
-# regex-test
+# regex_test
 
-Test and explain regex patterns.""".
-
-Zero dependencies. Python 3.8+.
+Regex tester — match, findall, groups, explain
 
 ## Usage
 
 ```bash
 python3 regex_test.py --help
 ```
+
+## License
+
+MIT
