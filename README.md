@@ -1,6 +1,6 @@
-# regex_test
+# regex-test
 
-Regex tester — match, findall, groups, explain
+Regex tester with match details
 
 ## Usage
 
@@ -8,6 +8,7 @@ Regex tester — match, findall, groups, explain
 python3 regex_test.py --help
 ```
 
-## License
+## Features
 
-MIT
+- Zero dependencies (Python 3.8+)
+- Single file implementation
